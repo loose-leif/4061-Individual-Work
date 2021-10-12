@@ -14,9 +14,9 @@ void pid1func(int fd[]){
     wait(NULL); // wait for the child process to finish its business
     
     // extraneous comments
-    //printf("Child Recieved Message\n");
-    //write sendmsg to the pipe
-    //ensure pipe ends are close properly
+    // printf("Child Recieved Message\n");
+    // write sendmsg to the pipe
+    // ensure pipe ends are close properly
 
 }
 
@@ -26,7 +26,7 @@ void pid2func(int fd[]){
     // close fds as necessary
     // redirect read end to STDIN_FILENO
     // read(fd[0], recvStr, 100);
-    //printf("Received msg from parent : %s \n", recvStr);
+    // printf("Received msg from parent : %s \n", recvStr);
     // run grep for "sample" on the text in STDIN_FILENO using execvp
 
     close(fd[1]); // child closes the write end of pipe
@@ -46,10 +46,10 @@ void pid2func(int fd[]){
 int main(int argc, char *argv[]){
     
     // extraneous comments
-    //printf("r: %d, w: %d\n", fd1[0], fd1[1]);
-    //printf("hello\n");
+    // printf("r: %d, w: %d\n", fd1[0], fd1[1]);
+    // printf("hello\n");
     // How many copies of pipe is created when the following processes are created? If you do not understand this, your program may run forever.
-    //if (PID > 0) { printf("COMPLETE\n"); }
+    // if (PID > 0) { printf("COMPLETE\n"); }
     // wait for both process to complete
     
     int fd1[2]; // create array of 2 int elements to hold file descriptors
@@ -76,14 +76,14 @@ int main(int argc, char *argv[]){
 
     }
 
-    else {  //fork second process
+    else {  // fork second process
 
         pid2func(fd1); 
         // run pid2func()
 
     }
 
-    wait(NULL);
+    // wait(NULL);
 
     return 0;
 
