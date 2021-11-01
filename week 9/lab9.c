@@ -14,6 +14,29 @@ int translate(int virtual_addr, int ***page_table) {
 	// Split the virtual address into 3 indexes and an offset
 	// Then index into page_table and combine the result with the offset
 
+	//printf("%x\n", virtual_addr);
+
+	//printf("hallo\n");
+
+	int first = virtual_addr & 0b111111111100000000000000000000;
+	first = first >> 20;
+
+	//printf("%d\n", first);
+
+	int sec = virtual_addr & 0b000000000011111100000000000000;
+	sec = sec >> 14;
+
+	//printf("%d\n", sec);
+
+	int third = virtual_addr & 0b000000000000000011111100000000;
+	third = third >> 8;
+
+	//printf("%d\n", third);
+
+	int off = virtual_addr & 0b000000000000000000000011111111;
+
+	physical_addr = off | (page_table[first][sec][third] << 8 );
+
 	return physical_addr;
 }
 
@@ -28,6 +51,7 @@ int main(int argc, char *argv[]) {
 
 	free_page_table(page_table);
 	return 0;
+
 }
 
 
