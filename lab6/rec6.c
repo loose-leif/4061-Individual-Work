@@ -9,8 +9,22 @@ void pid1func(int fd[]){
     char sendmsg[] = "I have a sample file, which consist of sample of sample";
     //char sendmsg[] = "I have a  file, which consist of  of ";
     
-    write(fd[1], sendmsg, strlen(sendmsg)+1); // write message to the output pipe buffer?
-    close(fd[1]); // parent closes the write end of the pipe 
+     // write message to the output pipe buffer?
+    if (write(fd[1], sendmsg, strlen(sendmsg) + 1) < 0) {
+
+        printf("ERROR: Failed writing...\n");
+        exit(1);
+
+    }
+    
+    if (close(fd[1]) < 0) {
+        
+        printf("ERROR: Failed closing...\n");
+        exit(1);
+
+    }
+    
+    // parent closes the write end of the pipe 
     wait(NULL); // wait for the child process to finish its business
     
     // extraneous comments
@@ -28,15 +42,31 @@ void pid2func(int fd[]){
     // read(fd[0], recvStr, 100);
     // printf("Received msg from parent : %s \n", recvStr);
     // run grep for "sample" on the text in STDIN_FILENO using execvp
+    // child closes the write end of pipe
 
-    close(fd[1]); // child closes the write end of pipe
+    if (close(fd[1]) < 0) {
 
-    dup2(fd[0], STDIN_FILENO); // in making a copy of fd[0] place the standard input file number
+        printf("ERROR: Failed closing...\n");
+        exit(1);
+
+    }
+
+    if (dup2(fd[0], STDIN_FILENO) < 0) {
+
+        printf("ERROR: Failed dup2...\n");
+        exit(1);
+
+    } // in making a copy of fd[0] place the standard input file number
                                // this will redirect the read buffer to the standard input marker
 
     char recvStr[100]; // arbitrary length string of characters
 
-    close(fd[0]); // child closes read buffer of pipe
+    if (close(fd[0]) < 0) {
+
+        printf("ERROR: Failed closing...\n");
+        exit(1);
+
+    } // child closes read buffer of pipe
     
     char *args[] = {"grep", "-a", "sample", NULL}; // search standard input for "sample"
     execvp("grep", args); // execute aforementioned command
@@ -54,7 +84,7 @@ int main(int argc, char *argv[]){
     
     int fd1[2]; // create array of 2 int elements to hold file descriptors
 
-    if (pipe(fd1) == -1) { // add error checking DONE
+    if (pipe(fd1) < 0) { // add error checking DONE
 
         printf("ERROR: Failed to generate pipeline...\n");
         exit(1);
